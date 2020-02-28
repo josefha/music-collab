@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import * as SpotifyWebApi from 'spotify-web-api-js';
 import AppBar from '../../common/components/AppBar'
 import { Grommet, Box, Button, Heading, TextInput, Paragraph } from 'grommet';
-import { Gamepad, Play, Next, Previous, Pause, Inbox, Home } from 'grommet-icons';
+import { Gamepad, Play, Next, Previous, Pause, Inbox, Home, Clear, Spotify } from 'grommet-icons';
 import { FirebaseContext } from "gatsby-plugin-firebase"
 import { navigate } from 'gatsby';
 
@@ -34,24 +34,39 @@ export default () => {
         });
     }
 
-    const updateInbox = (song) => {
-        setinboxResults([song])
+    const updateInbox = (songs) => {
+        if (songs) {
+            setinboxResults(Object.values(songs))
+        } else {
+            setinboxResults([])
+        }
+    }
+
+    const OpenInSpotify = (song) => {
+        var win = window.open(song.external_url, '_blank');
+        win.focus();
     }
 
     const InboxSongList = (props) => {
+        let songs = props.songs ? props.songs : []
         return (
             <Box style={{ margin: '10px' }} direction='column' flex>
                 {
-                    props.songs.map((song) =>
+                    songs.map((song) =>
                         <Box
                             index={song.uri}
                             style={{ margin: '8px 0' }} direction='row'>
                             <Button size="small" primary icon={<Play />} onClick={() => playSong(song)} />
-                            <Paragraph style={{ paddingLeft: '10px' }}>{song.name} want you to play <b>{song.title}</b></Paragraph>
+                            <Button size="small" primary icon={<Spotify />} onClick={() => OpenInSpotify(song)} />
+                            <Paragraph style={{ paddingLeft: '10px' }}>{song.sentBy} want you to play <b>{song.title}</b></Paragraph>
                         </Box>)
                 }
             </Box>
         )
+    }
+
+    const clearInbox = () => {
+        firebase.database().ref('room/' + roomId).remove()
     }
 
 
@@ -139,8 +154,10 @@ export default () => {
                     <Heading level='3' margin='none'>Music Collab</Heading>
                     <span>
                         {pageIndex == 0 ?
-                            <Button icon={<Inbox />} onClick={() => { setPageIndex(1) }} /> :
-                            <Button icon={<Home />} onClick={() => { setPageIndex(0) }} />}
+                            <Button icon={<Inbox />} onClick={() => { setPageIndex(1) }} />
+                            :
+                            <span><Button icon={<Clear />} onClick={() => clearInbox()} />
+                                <Button icon={<Home />} onClick={() => setPageIndex(0)} /></span>}
                         <Button icon={<Gamepad />} onClick={() => { navigate('client') }} />
                     </span>
                 </AppBar>

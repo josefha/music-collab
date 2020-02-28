@@ -42,16 +42,18 @@ export default () => {
 
 
     const sendSong = (song) => {
-        console.log(song)
-        firebase
-            .database()
-            .ref("room/" + roomId)
-            .set({
-                name,
-                title: song.name,
-                uri: song.uri,
-                external_url: song.external_urls.spotify,
-            })
+        let postData = {
+            sentBy: name,
+            title: song.name,
+            uri: song.uri,
+            external_url: song.external_urls.spotify,
+        }
+
+        let newSongKey = firebase.database().ref().child('room').push().key;
+        let updates = {};
+        updates['/room/' + roomId + '/' + newSongKey] = postData;
+
+        firebase.database().ref().update(updates);
     }
 
     const SongList = () => {
