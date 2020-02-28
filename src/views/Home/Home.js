@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import * as SpotifyWebApi from 'spotify-web-api-js';
+import AppBar from '../../common/components/AppBar'
 import { Grommet, Box, Button, Heading, TextInput, Paragraph } from 'grommet';
 import { Gamepad, Play, Next, Previous, Pause } from 'grommet-icons';
+import { navigate } from 'gatsby';
 
 export default () => {
     document.title = "music-collab beta"
@@ -33,20 +35,6 @@ export default () => {
 
     }
 
-    const AppBar = (props) => (
-        <Box
-            tag='header'
-            direction='row'
-            align='center'
-            justify='between'
-            background='brand'
-            pad={{ left: 'medium', right: 'small', vertical: 'small' }}
-            elevation='medium'
-            style={{ zIndex: '1' }}
-            {...props}
-        />
-    );
-
     const IncomingSong = () => {
         return (
             <Box style={{ margin: '10px' }} direction='column' flex>
@@ -72,30 +60,6 @@ export default () => {
             },
         },
     };
-
-
-
-
-
-
-    // spotifyApi.getArtistAlbums('43ZHCT0cAZBISjO8DG9PnE', function (err, data) {
-    //     if (err) console.error(err);
-    //     else console.log('Artist albums', data);
-    // });
-
-    // spotifyApi.getUserPlaylists('2020')
-    //     .then(function (data) {
-    //         console.log('User playlists', data);
-    //     }, function (err) {
-    //         console.error(err);
-    //     });
-
-    // spotifyApi.getUserPlaylists()  // note that we don't pass a user id
-    //     .then(function (data) {
-    //         console.log('User playlists', data);
-    //     }, function (err) {
-    //         console.error(err);
-    //     });
 
     const playSong = (song) => {
         let uri = song.uri
@@ -147,7 +111,7 @@ export default () => {
             <Box fill>
                 <AppBar >
                     <Heading level='3' margin='none'>Music Collab</Heading>
-                    <Button icon={<Gamepad />} onClick={() => { }} />
+                    <Button icon={<Gamepad />} onClick={() => { navigate('client') }} />
                 </AppBar>
                 <Box style={{ margin: '20px' }} direction='column' flex overflow={{ horizontal: 'hidden' }}>
                     <Box style={{ minHeight: '500px' }} flex align='start' justify='center'>
