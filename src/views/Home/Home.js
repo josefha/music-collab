@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import * as SpotifyWebApi from 'spotify-web-api-js';
+import { Grommet, Box, Button, Heading, List } from 'grommet';
+import { Notification } from 'grommet-icons';
 
 export default () => {
     document.title = "music-collab beta"
@@ -7,18 +9,51 @@ export default () => {
     let spotifyApi = new SpotifyWebApi()
     spotifyApi.setAccessToken(token)
 
+    const AppBar = (props) => (
+        <Box
+            tag='header'
+            direction='row'
+            align='center'
+            justify='between'
+            background='brand'
+            pad={{ left: 'medium', right: 'small', vertical: 'small' }}
+            elevation='medium'
+            style={{ zIndex: '1' }}
+            {...props}
+        />
+    );
 
-    // spotifyApi.pause().then(function (data) {
-    //     console.log('User playlists', data);
-    // }, function (err) {
-    //     console.error(err);
-    // });
+    const IncomingSong = () => {
+        const data =
+            [{ title: 'Levels', artist: 'Avacci', sentBy: 'Alex' },
+            { title: 'PIMP', artist: '50cent', sentBy: 'Josef' },
+            { title: 'Levels', artist: 'Avacci', sentBy: 'Martin' }]
 
-    // spotifyApi.skipToNext().then(function (data) {
-    //     console.log('User playlists', data);
-    // }, function (err) {
-    //     console.error(err);
-    // });
+        return (
+            <Box direction='column' flex>
+                {
+                    data.map((song) => <Box >{song.title + " - " + song.artist + '    | From ' + song.sentBy} </Box>)
+                }
+            </Box>
+        )
+
+    }
+
+
+    const theme = {
+        global: {
+            font: {
+                family: 'Roboto',
+                size: '18px',
+                height: '20px',
+            },
+        },
+    };
+
+
+
+
+
 
     // spotifyApi.getArtistAlbums('43ZHCT0cAZBISjO8DG9PnE', function (err, data) {
     //     if (err) console.error(err);
@@ -32,17 +67,70 @@ export default () => {
     //         console.error(err);
     //     });
 
-    spotifyApi.getUserPlaylists()  // note that we don't pass a user id
-        .then(function (data) {
+    // spotifyApi.getUserPlaylists()  // note that we don't pass a user id
+    //     .then(function (data) {
+    //         console.log('User playlists', data);
+    //     }, function (err) {
+    //         console.error(err);
+    //     });
+
+    const play = () => {
+        spotifyApi.play().then(function (data) {
             console.log('User playlists', data);
         }, function (err) {
             console.error(err);
         });
+    }
+
+    const nextSong = () => {
+        spotifyApi.skipToNext().then(function (data) {
+            console.log('User playlists', data);
+        }, function (err) {
+            console.error(err);
+        });
+    }
+
+    const pause = () => {
+        spotifyApi.pause().then(function (data) {
+            console.log('User playlists', data);
+        }, function (err) {
+            console.error(err);
+        });
+    }
+
+    const prevSong = () => {
+        spotifyApi.skipToPrevious().then(function (data) {
+            console.log('User playlists', data);
+        }, function (err) {
+            console.error(err);
+        });
+    }
 
     useEffect(() => {
         console.log("YES")
-
     });
 
-    return (<div>Hello welcome to music-collab!</div>)
+
+
+    return (
+        <Grommet theme={theme} themeMode="dark">
+            <Box fill>
+                <AppBar >
+                    <Heading level='3' margin='none'>Music Collab</Heading>
+                    <Button icon={<Notification />} onClick={() => { }} />
+                </AppBar>
+
+                <Box style={{ margin: '20px' }} direction='column' flex overflow={{ horizontal: 'hidden' }}>
+                    <Box style={{ minHeight: '500px' }} flex align='center' justify='center'>
+                        <IncomingSong />
+                    </Box>
+                    <Box direction='row' flex align='center' justify='center'>
+                        <Button primary label="<-" onClick={() => prevSong()} />
+                        <Button primary label="||" onClick={() => pause()} />
+                        <Button primary label="play" onClick={() => play()} />
+                        <Button primary label="->" onClick={() => nextSong()} />
+                    </Box>
+                </Box>
+            </Box >
+        </Grommet >)
 } 
