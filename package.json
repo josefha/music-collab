@@ -16,7 +16,8 @@
   "dependencies": {
     "gatsby": "^2.19.7",
     "react": "^16.12.0",
-    "react-dom": "^16.12.0"
+    "react-dom": "^16.12.0",
+    "spotify-web-api-js": "^1.2.0"
   },
   "devDependencies": {
     "prettier": "^1.19.1"
