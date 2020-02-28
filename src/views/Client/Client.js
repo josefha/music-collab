@@ -4,7 +4,7 @@ import { Grommet, Box, Button, Heading, TextInput, Paragraph } from 'grommet';
 import { Gremlin, Send } from 'grommet-icons';
 import { navigate } from 'gatsby';
 import AppBar from '../../common/components/AppBar'
-import { useFirebase } from "gatsby-plugin-firebase"
+import { FirebaseContext } from "gatsby-plugin-firebase"
 
 export default () => {
     document.title = "music-collab beta"
@@ -12,18 +12,20 @@ export default () => {
     let spotifyApi = new SpotifyWebApi()
     spotifyApi.setAccessToken(token)
 
-    const [roomId, setroomId] = useState("TEST0505");
-    const [name, setName] = useState("Client");
+    const [roomId, setroomId] = useState("TEST01");
+    const [name, setName] = useState("Alex");
 
     const [searchQueary, setsearchQueary] = useState("");
     const [searchResults, setSearchResults] = useState([]);
 
-    useFirebase(firebase => {
-        firebase
-            .database()
-            .ref("rooms/" + roomId)
-            .set({ name, song_link: "song_uri" })
-    }, [])
+    const firebase = React.useContext(FirebaseContext)
+
+    // useFirebase(firebase => {
+    //     firebase
+    //         .database()
+    //         .ref("rooms/" + roomId)
+    //         .set({ name, song_link: "song_uri" })
+    // }, [])
 
     var prev = null
     const onChange = event => {
@@ -48,7 +50,15 @@ export default () => {
 
     const sendSong = (song) => {
         console.log(song)
-
+        firebase
+            .database()
+            .ref("rooms/" + roomId)
+            .set({
+                name,
+                title: song.name,
+                uri: song.uri,
+                external_url: song.external_urls.spotify,
+            })
     }
 
     const SongList = () => {

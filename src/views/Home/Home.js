@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import * as SpotifyWebApi from 'spotify-web-api-js';
 import AppBar from '../../common/components/AppBar'
 import { Grommet, Box, Button, Heading, TextInput, Paragraph } from 'grommet';
-import { Gamepad, Play, Next, Previous, Pause } from 'grommet-icons';
+import { Gamepad, Play, Next, Previous, Pause, Inbox, Home } from 'grommet-icons';
 import { navigate } from 'gatsby';
 
 export default () => {
@@ -13,6 +13,10 @@ export default () => {
 
     const [searchQueary, setsearchQueary] = useState("");
     const [searchResults, setSearchResults] = useState([]);
+    const [inboxResults, setinboxResults] = useState([]);
+
+
+    const [pageIndex, setPageIndex] = useState(0);
 
     var prev = null
     const onChange = event => {
@@ -35,11 +39,11 @@ export default () => {
 
     }
 
-    const IncomingSong = () => {
+    const SongList = (props) => {
         return (
             <Box style={{ margin: '10px' }} direction='column' flex>
                 {
-                    searchResults.map((song) =>
+                    props.songs.map((song) =>
                         <Box style={{ margin: '8px 0' }} direction='row'>
                             <Button size="small" primary icon={<Play />} onClick={() => playSong(song)} />
                             <Paragraph style={{ paddingLeft: '10px' }}>{song.name}</Paragraph>
@@ -103,20 +107,29 @@ export default () => {
         });
     }
 
-    useEffect(() => {
-    });
-
     return (
         <Grommet themeMode="dark">
             <Box fill>
                 <AppBar >
                     <Heading level='3' margin='none'>Music Collab</Heading>
-                    <Button icon={<Gamepad />} onClick={() => { navigate('client') }} />
+                    <span>
+                        {pageIndex == 0 ?
+                            <Button icon={<Inbox />} onClick={() => { setPageIndex(1) }} /> :
+                            <Button icon={<Home />} onClick={() => { setPageIndex(0) }} />}
+                        <Button icon={<Gamepad />} onClick={() => { navigate('client') }} />
+                    </span>
                 </AppBar>
                 <Box style={{ margin: '20px' }} direction='column' flex overflow={{ horizontal: 'hidden' }}>
                     <Box style={{ minHeight: '500px' }} flex align='start' justify='center'>
-                        <TextInput value={searchQueary} onChange={onChange} />
-                        <IncomingSong />
+                        {pageIndex == 0 ?
+                            <>
+                                <TextInput value={searchQueary} onChange={onChange} />
+                                <SongList songs={searchResults} />
+                            </> :
+                            <>
+                                <h3> Your friends recomendations: </h3>
+                                <SongList songs={inboxResults} />
+                            </>}
                     </Box>
                     <Box direction='row' flex align='center' justify='center'>
                         <Button primary icon={<Previous />} onClick={() => prevSong()} />
