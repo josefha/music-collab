@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import * as SpotifyWebApi from 'spotify-web-api-js';
 import { Grommet, Box, Button, Heading, TextInput, Paragraph } from 'grommet';
-import { Gamepad, Send } from 'grommet-icons';
+import { Gremlin, Send } from 'grommet-icons';
 import { navigate } from 'gatsby';
 import AppBar from '../../common/components/AppBar'
+import { useFirebase } from "gatsby-plugin-firebase"
 
 export default () => {
     document.title = "music-collab beta"
@@ -11,8 +12,18 @@ export default () => {
     let spotifyApi = new SpotifyWebApi()
     spotifyApi.setAccessToken(token)
 
+    const [roomId, setroomId] = useState("TEST0505");
+    const [name, setName] = useState("Client");
+
     const [searchQueary, setsearchQueary] = useState("");
     const [searchResults, setSearchResults] = useState([]);
+
+    useFirebase(firebase => {
+        firebase
+            .database()
+            .ref("rooms/" + roomId)
+            .set({ name, song_link: "song_uri" })
+    }, [])
 
     var prev = null
     const onChange = event => {
@@ -34,8 +45,10 @@ export default () => {
         });
     }
 
+
     const sendSong = (song) => {
         console.log(song)
+
     }
 
     const SongList = () => {
@@ -50,17 +63,14 @@ export default () => {
                 }
             </Box>
         )
-
     }
-
-
 
     return (
         <Grommet themeMode="dark">
             <Box fill>
                 <AppBar >
-                    <Heading level='3' margin='none'>Music Collab - Client</Heading>
-                    <Button icon={<Gamepad />} onClick={() => { navigate('/') }} />
+                    <Heading level='3' margin='none'>Music Collab - {name}</Heading>
+                    <Button icon={<Gremlin />} onClick={() => { navigate('/') }} />
                 </AppBar>
                 <Box style={{ margin: '20px' }} direction='column' flex overflow={{ horizontal: 'hidden' }}>
                     <Box style={{ minHeight: '500px' }} flex align='start' justify='center'>
