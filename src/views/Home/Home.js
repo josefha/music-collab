@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import * as SpotifyWebApi from 'spotify-web-api-js';
 import { Grommet, Box, Button, Heading, List } from 'grommet';
-import { Notification } from 'grommet-icons';
+import { Gamepad, Play, Next, Previous, Pause } from 'grommet-icons';
 
 export default () => {
     document.title = "music-collab beta"
@@ -113,11 +113,11 @@ export default () => {
 
 
     return (
-        <Grommet theme={theme} themeMode="dark">
+        <Grommet themeMode="dark">
             <Box fill>
                 <AppBar >
                     <Heading level='3' margin='none'>Music Collab</Heading>
-                    <Button icon={<Notification />} onClick={() => { }} />
+                    <Button icon={<Gamepad />} onClick={() => { }} />
                 </AppBar>
 
                 <Box style={{ margin: '20px' }} direction='column' flex overflow={{ horizontal: 'hidden' }}>
@@ -125,10 +125,10 @@ export default () => {
                         <IncomingSong />
                     </Box>
                     <Box direction='row' flex align='center' justify='center'>
-                        <Button primary label="<-" onClick={() => prevSong()} />
-                        <Button primary label="||" onClick={() => pause()} />
-                        <Button primary label="play" onClick={() => play()} />
-                        <Button primary label="->" onClick={() => nextSong()} />
+                        <Button primary icon={<Previous />} onClick={() => prevSong()} />
+                        <Button primary icon={<Pause />} onClick={() => pause()} />
+                        <Button primary icon={<Play />} onClick={() => play()} />
+                        <Button primary icon={<Next />} onClick={() => nextSong()} />
                     </Box>
                 </Box>
             </Box >
