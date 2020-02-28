@@ -8,7 +8,6 @@ import { navigate } from 'gatsby';
 
 
 export default () => {
-    document.title = "music-collab beta"
     const token = process.env.GATSBY_SPOTIFY_TOKEN
     let spotifyApi = new SpotifyWebApi()
     spotifyApi.setAccessToken(token)
@@ -57,7 +56,7 @@ export default () => {
                             index={song.uri}
                             style={{ margin: '8px 0' }} direction='row'>
                             <Button size="small" primary icon={<Play />} onClick={() => playSong(song)} />
-                            <Button size="small" primary icon={<Spotify />} onClick={() => OpenInSpotify(song)} />
+                            <Button style={{ marginLeft: '5px' }} size="small" primary icon={<Spotify />} onClick={() => OpenInSpotify(song)} />
                             <Paragraph style={{ paddingLeft: '10px' }}>{song.sentBy} want you to play <b>{song.title}</b></Paragraph>
                         </Box>)
                 }
@@ -175,9 +174,9 @@ export default () => {
                     </Box>
                     <Box direction='row' flex align='center' justify='center'>
                         <Button primary icon={<Previous />} onClick={() => prevSong()} />
-                        <Button primary icon={<Pause />} onClick={() => pause()} />
-                        <Button primary icon={<Play />} onClick={() => play()} />
-                        <Button primary icon={<Next />} onClick={() => nextSong()} />
+                        <Button style={{ marginLeft: '5px' }} primary icon={<Pause />} onClick={() => pause()} />
+                        <Button style={{ marginLeft: '5px' }} primary icon={<Play />} onClick={() => play()} />
+                        <Button style={{ marginLeft: '5px' }} primary icon={<Next />} onClick={() => nextSong()} />
                     </Box>
                 </Box>
             </Box >

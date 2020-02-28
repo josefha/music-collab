@@ -7,7 +7,6 @@ import AppBar from '../../common/components/AppBar'
 import { FirebaseContext } from "gatsby-plugin-firebase"
 
 export default () => {
-    document.title = "music-collab beta"
     const token = process.env.GATSBY_SPOTIFY_TOKEN
     let spotifyApi = new SpotifyWebApi()
     spotifyApi.setAccessToken(token)
