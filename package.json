@@ -17,6 +17,7 @@
     "firebase": "^7.9.2",
     "gatsby": "^2.19.7",
     "gatsby-plugin-firebase": "^0.1.8",
+    "gatsby-plugin-prefetch-google-fonts": "^1.4.3",
     "grommet": "^2.11.1",
     "grommet-icons": "^4.4.0",
     "react": "^16.12.0",

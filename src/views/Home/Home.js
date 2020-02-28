@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import * as SpotifyWebApi from 'spotify-web-api-js';
 import AppBar from '../../common/components/AppBar'
-import { Grommet, Box, Button, Heading, TextInput, Paragraph } from 'grommet';
+import AppWrapper from '../../common/components/AppWrapper'
+import { Box, Button, Heading, TextInput, Paragraph } from 'grommet';
 import { Gamepad, Play, Next, Previous, Pause, Inbox, Home, Clear, Spotify } from 'grommet-icons';
 import { FirebaseContext } from "gatsby-plugin-firebase"
 import { navigate } from 'gatsby';
@@ -147,38 +148,36 @@ export default () => {
     }
 
     return (
-        <Grommet themeMode="dark">
-            <Box fill>
-                <AppBar >
-                    <Heading level='3' margin='none'>Music Collab</Heading>
-                    <span>
-                        {pageIndex == 0 ?
-                            <Button icon={<Inbox />} onClick={() => { setPageIndex(1) }} />
-                            :
-                            <span><Button icon={<Clear />} onClick={() => clearInbox()} />
-                                <Button icon={<Home />} onClick={() => setPageIndex(0)} /></span>}
-                        <Button icon={<Gamepad />} onClick={() => { navigate('client') }} />
-                    </span>
-                </AppBar>
-                <Box style={{ margin: '20px' }} direction='column' flex overflow={{ horizontal: 'hidden' }}>
-                    <Box style={{ minHeight: '500px' }} flex align='start' justify='center'>
-                        {pageIndex == 0 ?
-                            <>
-                                <TextInput value={searchQueary} onChange={onChange} />
-                                <SongList songs={searchResults} />
-                            </> :
-                            <>
-                                <h3> Your friends recomendations: </h3>
-                                <InboxSongList songs={inboxResults} />
-                            </>}
-                    </Box>
-                    <Box direction='row' flex align='center' justify='center'>
-                        <Button primary icon={<Previous />} onClick={() => prevSong()} />
-                        <Button style={{ marginLeft: '5px' }} primary icon={<Pause />} onClick={() => pause()} />
-                        <Button style={{ marginLeft: '5px' }} primary icon={<Play />} onClick={() => play()} />
-                        <Button style={{ marginLeft: '5px' }} primary icon={<Next />} onClick={() => nextSong()} />
-                    </Box>
+        <AppWrapper>
+            <AppBar >
+                <Heading level='3' margin='none'>Music Collab</Heading>
+                <span>
+                    {pageIndex === 0 ?
+                        <Button icon={<Inbox />} onClick={() => { setPageIndex(1) }} />
+                        :
+                        <span><Button icon={<Clear />} onClick={() => clearInbox()} />
+                            <Button icon={<Home />} onClick={() => setPageIndex(0)} /></span>}
+                    <Button icon={<Gamepad />} onClick={() => { navigate('client') }} />
+                </span>
+            </AppBar>
+            <Box style={{ margin: '20px' }} direction='column' flex overflow={{ horizontal: 'hidden' }}>
+                <Box style={{ minHeight: '500px' }} flex align='start' justify='center'>
+                    {pageIndex === 0 ?
+                        <>
+                            <TextInput value={searchQueary} onChange={onChange} />
+                            <SongList songs={searchResults} />
+                        </> :
+                        <>
+                            <h3> Your friends recomendations: </h3>
+                            <InboxSongList songs={inboxResults} />
+                        </>}
                 </Box>
-            </Box >
-        </Grommet >)
+                <Box direction='row' flex align='center' justify='center'>
+                    <Button primary icon={<Previous />} onClick={() => prevSong()} />
+                    <Button style={{ marginLeft: '5px' }} primary icon={<Pause />} onClick={() => pause()} />
+                    <Button style={{ marginLeft: '5px' }} primary icon={<Play />} onClick={() => play()} />
+                    <Button style={{ marginLeft: '5px' }} primary icon={<Next />} onClick={() => nextSong()} />
+                </Box>
+            </Box>
+        </AppWrapper>)
 } 

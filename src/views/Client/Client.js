@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import * as SpotifyWebApi from 'spotify-web-api-js';
-import { Grommet, Box, Button, Heading, TextInput, Paragraph } from 'grommet';
+import { Box, Button, Heading, TextInput, Paragraph } from 'grommet';
 import { Gremlin, Send } from 'grommet-icons';
 import { navigate } from 'gatsby';
 import AppBar from '../../common/components/AppBar'
+import AppWrapper from '../../common/components/AppWrapper'
 import { FirebaseContext } from "gatsby-plugin-firebase"
 
 export default () => {
@@ -69,19 +70,19 @@ export default () => {
         )
     }
 
+
     return (
-        <Grommet themeMode="dark">
-            <Box fill>
-                <AppBar >
-                    <Heading level='3' margin='none'>Music Collab - {name}</Heading>
-                    <Button icon={<Gremlin />} onClick={() => { navigate('/') }} />
-                </AppBar>
-                <Box style={{ margin: '20px' }} direction='column' flex overflow={{ horizontal: 'hidden' }}>
-                    <Box style={{ minHeight: '500px' }} flex align='start' justify='center'>
-                        <TextInput value={searchQueary} onChange={onChange} />
-                        <SongList />
-                    </Box>
+        <AppWrapper>
+            <AppBar >
+                <Heading level='3' margin='none'>Client - {name}</Heading>
+                <Button icon={<Gremlin />} onClick={() => { navigate('/') }} />
+            </AppBar>
+            <Box style={{ margin: '20px' }} direction='column' flex overflow={{ horizontal: 'hidden' }}>
+                <Box style={{ minHeight: '500px' }} flex align='start' justify='center'>
+                    <TextInput value={searchQueary} onChange={onChange} />
+                    <SongList />
                 </Box>
-            </Box >
-        </Grommet >)
+            </Box>
+        </AppWrapper >
+    )
 } 
