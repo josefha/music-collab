@@ -3,20 +3,57 @@ import * as SpotifyWebApi from 'spotify-web-api-js';
 import AppBar from '../../common/components/AppBar'
 import { Grommet, Box, Button, Heading, TextInput, Paragraph } from 'grommet';
 import { Gamepad, Play, Next, Previous, Pause, Inbox, Home } from 'grommet-icons';
+import { FirebaseContext } from "gatsby-plugin-firebase"
 import { navigate } from 'gatsby';
+
 
 export default () => {
     document.title = "music-collab beta"
     const token = process.env.GATSBY_SPOTIFY_TOKEN
     let spotifyApi = new SpotifyWebApi()
     spotifyApi.setAccessToken(token)
+    const firebase = React.useContext(FirebaseContext)
 
     const [searchQueary, setsearchQueary] = useState("");
     const [searchResults, setSearchResults] = useState([]);
     const [inboxResults, setinboxResults] = useState([]);
-
-
     const [pageIndex, setPageIndex] = useState(0);
+
+    useEffect(() => {
+        if (!firebase) {
+            return
+        }
+        LisenOnInbox()
+    }, [firebase])
+
+    const roomId = "TEST01"
+    const LisenOnInbox = () => {
+        var inboxRef = firebase.database().ref('room/' + roomId);
+        inboxRef.on('value', function (snapshot) {
+            updateInbox(snapshot.val());
+        });
+    }
+
+    const updateInbox = (song) => {
+        setinboxResults([song])
+    }
+
+    const InboxSongList = (props) => {
+        return (
+            <Box style={{ margin: '10px' }} direction='column' flex>
+                {
+                    props.songs.map((song) =>
+                        <Box
+                            index={song.uri}
+                            style={{ margin: '8px 0' }} direction='row'>
+                            <Button size="small" primary icon={<Play />} onClick={() => playSong(song)} />
+                            <Paragraph style={{ paddingLeft: '10px' }}>{song.name} want you to play <b>{song.title}</b></Paragraph>
+                        </Box>)
+                }
+            </Box>
+        )
+    }
+
 
     var prev = null
     const onChange = event => {
@@ -37,42 +74,6 @@ export default () => {
             console.error(err);
         });
 
-    }
-
-    const SongList = (props) => {
-        return (
-            <Box style={{ margin: '10px' }} direction='column' flex>
-                {
-                    props.songs.map((song) =>
-                        <Box style={{ margin: '8px 0' }} direction='row'>
-                            <Button size="small" primary icon={<Play />} onClick={() => playSong(song)} />
-                            <Paragraph style={{ paddingLeft: '10px' }}>{song.name}</Paragraph>
-                        </Box>)
-                }
-            </Box>
-        )
-
-    }
-
-
-    const theme = {
-        global: {
-            font: {
-                family: 'Roboto',
-                size: '18px',
-                height: '20px',
-            },
-        },
-    };
-
-    const playSong = (song) => {
-        let uri = song.uri
-        console.log(uri)
-        spotifyApi.play({ uris: [uri] }).then(function (data) {
-            console.log('playback', data);
-        }, function (err) {
-            console.error(err);
-        });
     }
 
     const play = () => {
@@ -107,6 +108,30 @@ export default () => {
         });
     }
 
+    const playSong = (song) => {
+        let uri = song.uri
+        console.log(uri)
+        spotifyApi.play({ uris: [uri] }).then(function (data) {
+            console.log('playback', data);
+        }, function (err) {
+            console.error(err);
+        });
+    }
+
+    const SongList = (props) => {
+        return (
+            <Box style={{ margin: '10px' }} direction='column' flex>
+                {
+                    props.songs.map((song) =>
+                        <Box style={{ margin: '8px 0' }} direction='row'>
+                            <Button size="small" primary icon={<Play />} onClick={() => playSong(song)} />
+                            <Paragraph style={{ paddingLeft: '10px' }}>{song.name}</Paragraph>
+                        </Box>)
+                }
+            </Box>
+        )
+    }
+
     return (
         <Grommet themeMode="dark">
             <Box fill>
@@ -128,7 +153,7 @@ export default () => {
                             </> :
                             <>
                                 <h3> Your friends recomendations: </h3>
-                                <SongList songs={inboxResults} />
+                                <InboxSongList songs={inboxResults} />
                             </>}
                     </Box>
                     <Box direction='row' flex align='center' justify='center'>

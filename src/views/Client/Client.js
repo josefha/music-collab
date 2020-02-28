@@ -20,13 +20,6 @@ export default () => {
 
     const firebase = React.useContext(FirebaseContext)
 
-    // useFirebase(firebase => {
-    //     firebase
-    //         .database()
-    //         .ref("rooms/" + roomId)
-    //         .set({ name, song_link: "song_uri" })
-    // }, [])
-
     var prev = null
     const onChange = event => {
         let queryTerm = event.target.value
@@ -52,7 +45,7 @@ export default () => {
         console.log(song)
         firebase
             .database()
-            .ref("rooms/" + roomId)
+            .ref("room/" + roomId)
             .set({
                 name,
                 title: song.name,
