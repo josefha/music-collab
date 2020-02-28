@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import * as SpotifyWebApi from 'spotify-web-api-js';
-import { Grommet, Box, Button, Heading, List } from 'grommet';
+import { Grommet, Box, Button, Heading, TextInput, Paragraph } from 'grommet';
 import { Gamepad, Play, Next, Previous, Pause } from 'grommet-icons';
 
 export default () => {
@@ -8,6 +8,30 @@ export default () => {
     const token = process.env.GATSBY_SPOTIFY_TOKEN
     let spotifyApi = new SpotifyWebApi()
     spotifyApi.setAccessToken(token)
+
+    const [searchQueary, setsearchQueary] = useState("");
+    const [searchResults, setSearchResults] = useState([]);
+
+    var prev = null
+    const onChange = event => {
+        let queryTerm = event.target.value
+        setsearchQueary(queryTerm);
+        // abort previous request, if any
+        if (prev !== null) {
+            prev.abort();
+        }
+        // store the current promise in case we need to abort it
+        prev = spotifyApi.searchTracks(queryTerm, { limit: 10 });
+        prev.then(function (data) {
+            // clean the promise so it doesn't call abort
+            prev = null;
+            // ...render list of search results...
+            setSearchResults(data.tracks.items)
+        }, function (err) {
+            console.error(err);
+        });
+
+    }
 
     const AppBar = (props) => (
         <Box
@@ -24,15 +48,14 @@ export default () => {
     );
 
     const IncomingSong = () => {
-        const data =
-            [{ title: 'Levels', artist: 'Avacci', sentBy: 'Alex' },
-            { title: 'PIMP', artist: '50cent', sentBy: 'Josef' },
-            { title: 'Levels', artist: 'Avacci', sentBy: 'Martin' }]
-
         return (
-            <Box direction='column' flex>
+            <Box style={{ margin: '10px' }} direction='column' flex>
                 {
-                    data.map((song) => <Box >{song.title + " - " + song.artist + '    | From ' + song.sentBy} </Box>)
+                    searchResults.map((song) =>
+                        <Box style={{ margin: '8px 0' }} direction='row'>
+                            <Button size="small" primary icon={<Play />} onClick={() => playSong(song)} />
+                            <Paragraph style={{ paddingLeft: '10px' }}>{song.name}</Paragraph>
+                        </Box>)
                 }
             </Box>
         )
@@ -74,6 +97,16 @@ export default () => {
     //         console.error(err);
     //     });
 
+    const playSong = (song) => {
+        let uri = song.uri
+        console.log(uri)
+        spotifyApi.play({ uris: [uri] }).then(function (data) {
+            console.log('playback', data);
+        }, function (err) {
+            console.error(err);
+        });
+    }
+
     const play = () => {
         spotifyApi.play().then(function (data) {
             console.log('User playlists', data);
@@ -107,10 +140,7 @@ export default () => {
     }
 
     useEffect(() => {
-        console.log("YES")
     });
-
-
 
     return (
         <Grommet themeMode="dark">
@@ -119,9 +149,9 @@ export default () => {
                     <Heading level='3' margin='none'>Music Collab</Heading>
                     <Button icon={<Gamepad />} onClick={() => { }} />
                 </AppBar>
-
                 <Box style={{ margin: '20px' }} direction='column' flex overflow={{ horizontal: 'hidden' }}>
-                    <Box style={{ minHeight: '500px' }} flex align='center' justify='center'>
+                    <Box style={{ minHeight: '500px' }} flex align='start' justify='center'>
+                        <TextInput value={searchQueary} onChange={onChange} />
                         <IncomingSong />
                     </Box>
                     <Box direction='row' flex align='center' justify='center'>
