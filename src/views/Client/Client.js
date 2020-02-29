@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import * as SpotifyWebApi from 'spotify-web-api-js';
 import { Box, Button, Heading, TextInput, Paragraph } from 'grommet';
 import { Gremlin, Send } from 'grommet-icons';
@@ -6,11 +6,14 @@ import { navigate } from 'gatsby';
 import AppBar from '../../common/components/AppBar'
 import AppWrapper from '../../common/components/AppWrapper'
 import { FirebaseContext } from "gatsby-plugin-firebase"
+import { Context } from '../../common/components/State/Store'
 
 export default () => {
     const token = process.env.GATSBY_SPOTIFY_TOKEN
     let spotifyApi = new SpotifyWebApi()
     spotifyApi.setAccessToken(token)
+
+    const [state, dispatch] = useContext(Context);
 
     const [roomId, setroomId] = useState("TEST01");
     const [name, setName] = useState("Alex");
@@ -18,7 +21,7 @@ export default () => {
     const [searchQueary, setsearchQueary] = useState("");
     const [searchResults, setSearchResults] = useState([]);
 
-    const firebase = React.useContext(FirebaseContext)
+    const firebase = useContext(FirebaseContext)
 
     var prev = null
     const onChange = event => {
@@ -74,7 +77,7 @@ export default () => {
     return (
         <AppWrapper>
             <AppBar >
-                <Heading level='3' margin='none'>Client - {name}</Heading>
+                <Heading level='3' margin='none'>Room - {name}</Heading>
                 <Button icon={<Gremlin />} onClick={() => { navigate('/') }} />
             </AppBar>
             <Box style={{ margin: '20px' }} direction='column' flex overflow={{ horizontal: 'hidden' }}>
