@@ -9,17 +9,26 @@ import { Context } from '../../common/components/State/Store'
 
 export default () => {
     const [state, dispatch] = useContext(Context);
-
-    const [roomId, setroomId] = useState("TEST01");
-    const [name, setName] = useState("Alex");
-
     const [code, setCode] = useState("");
-    const [searchResults, setSearchResults] = useState([]);
 
     const joinRoom = () => {
-        console.log("Joiing")
-        dispatch({ type: 'SET_ROOM_ID', payload: "TEST02" })
+        dispatch({ type: 'SET_ROOM_ID', payload: code })
         navigate('/client')
+    }
+
+    const createRoom = () => {
+        dispatch({ type: 'SET_ROOM_ID', payload: makeid(4) })
+        navigate('/play')
+    }
+
+    const makeid = (length) => {
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        var charactersLength = characters.length;
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
     }
 
     return (
@@ -35,7 +44,7 @@ export default () => {
                         style={{ margin: '0 0 15px 0' }}
                         value={code} onChange={(e) => setCode(e.target.value)} />
                     <Button style={{ maxWidth: '350px', margin: "5px" }} primary label="Join" onClick={() => joinRoom()} />
-                    <Button style={{ maxWidth: '350px', margin: "5px" }} label="Or Create New Player" onClick={() => navigate('/play')} />
+                    <Button style={{ maxWidth: '350px', margin: "5px" }} label="Or Create New Player" onClick={() => createRoom()} />
                 </Box>
             </Box>
         </AppWrapper >

@@ -15,7 +15,6 @@ export default () => {
 
     const [state, dispatch] = useContext(Context);
 
-    const [roomId, setroomId] = useState("TEST01");
     const [name, setName] = useState("Alex");
 
     const [searchQueary, setsearchQueary] = useState("");
@@ -54,7 +53,7 @@ export default () => {
 
         let newSongKey = firebase.database().ref().child('room').push().key;
         let updates = {};
-        updates['/room/' + roomId + '/' + newSongKey] = postData;
+        updates['/room/' + state.roomId + '/' + newSongKey] = postData;
 
         firebase.database().ref().update(updates);
     }
@@ -77,7 +76,7 @@ export default () => {
     return (
         <AppWrapper>
             <AppBar >
-                <Heading level='3' margin='none'>Room - {name}</Heading>
+                <Heading level='3' margin='none'>Send songs to {state.roomId}</Heading>
                 <Button icon={<Gremlin />} onClick={() => { navigate('/') }} />
             </AppBar>
             <Box style={{ margin: '20px' }} direction='column' flex overflow={{ horizontal: 'hidden' }}>

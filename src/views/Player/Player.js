@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import * as SpotifyWebApi from 'spotify-web-api-js';
 import AppBar from '../../common/components/AppBar'
 import AppWrapper from '../../common/components/AppWrapper'
 import { Box, Button, Heading, TextInput, Paragraph } from 'grommet';
 import { Gamepad, Play, Next, Previous, Pause, Inbox, Home, Clear, Spotify } from 'grommet-icons';
 import { FirebaseContext } from "gatsby-plugin-firebase"
+import { Context } from '../../common/components/State/Store'
 import { navigate } from 'gatsby';
 
 
@@ -12,8 +13,9 @@ export default () => {
     const token = process.env.GATSBY_SPOTIFY_TOKEN
     let spotifyApi = new SpotifyWebApi()
     spotifyApi.setAccessToken(token)
-    const firebase = React.useContext(FirebaseContext)
 
+    const firebase = React.useContext(FirebaseContext)
+    const [state, dispatch] = useContext(Context);
     const [searchQueary, setsearchQueary] = useState("");
     const [searchResults, setSearchResults] = useState([]);
     const [inboxResults, setinboxResults] = useState([]);
@@ -26,9 +28,8 @@ export default () => {
         LisenOnInbox()
     }, [firebase])
 
-    const roomId = "TEST01"
     const LisenOnInbox = () => {
-        var inboxRef = firebase.database().ref('room/' + roomId);
+        var inboxRef = firebase.database().ref('room/' + state.roomId);
         inboxRef.on('value', function (snapshot) {
             updateInbox(snapshot.val());
         });
@@ -66,7 +67,7 @@ export default () => {
     }
 
     const clearInbox = () => {
-        firebase.database().ref('room/' + roomId).remove()
+        firebase.database().ref('room/' + state.roomId).remove()
     }
 
 
@@ -150,14 +151,15 @@ export default () => {
     return (
         <AppWrapper>
             <AppBar >
-                <Heading level='3' margin='none'>Music Collab</Heading>
+                <Heading level='3' margin='none'>Music Collab: {state.roomId}</Heading>
                 <span>
                     {pageIndex === 0 ?
                         <Button icon={<Inbox />} onClick={() => { setPageIndex(1) }} />
                         :
-                        <span><Button icon={<Clear />} onClick={() => clearInbox()} />
-                            <Button icon={<Home />} onClick={() => setPageIndex(0)} /></span>}
-                    <Button icon={<Gamepad />} onClick={() => { navigate('client') }} />
+                        <span>
+                            <Button icon={<Clear />} onClick={() => clearInbox()} />
+                            <Button icon={<Home />} onClick={() => setPageIndex(0)} />
+                        </span>}
                 </span>
             </AppBar>
             <Box style={{ margin: '20px' }} direction='column' flex overflow={{ horizontal: 'hidden' }}>

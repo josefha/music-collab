@@ -3,7 +3,6 @@ import Reducer from './Reducer'
 
 
 const initialState = {
-    posts: [],
     roomId: "",
     error: null
 };
