@@ -4,7 +4,6 @@ import Reducer from './Reducer'
 
 const initialState = {
     roomId: "",
-    error: null
 };
 
 const Store = ({ children }) => {

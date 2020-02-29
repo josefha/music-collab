@@ -5,7 +5,7 @@ import AppWrapper from '../../common/components/AppWrapper'
 import { Box, Button, Heading, TextInput, Paragraph } from 'grommet';
 import { Gamepad, Play, Next, Previous, Pause, Inbox, Home, Clear, Spotify } from 'grommet-icons';
 import { FirebaseContext } from "gatsby-plugin-firebase"
-import { Context } from '../../common/components/State/Store'
+import { GlobalStateContext } from '../../common/context/GlobalContextProvider'
 import { navigate } from 'gatsby';
 
 
@@ -15,7 +15,8 @@ export default () => {
     spotifyApi.setAccessToken(token)
 
     const firebase = React.useContext(FirebaseContext)
-    const [state, dispatch] = useContext(Context);
+    const state = useContext(GlobalStateContext) || { roomId: "" };
+
     const [searchQueary, setsearchQueary] = useState("");
     const [searchResults, setSearchResults] = useState([]);
     const [inboxResults, setinboxResults] = useState([]);

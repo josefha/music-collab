@@ -6,15 +6,14 @@ import { navigate } from 'gatsby';
 import AppBar from '../../common/components/AppBar'
 import AppWrapper from '../../common/components/AppWrapper'
 import { FirebaseContext } from "gatsby-plugin-firebase"
-import { Context } from '../../common/components/State/Store'
+import { GlobalStateContext } from '../../common/context/GlobalContextProvider'
 
 export default () => {
     const token = process.env.GATSBY_SPOTIFY_TOKEN
     let spotifyApi = new SpotifyWebApi()
     spotifyApi.setAccessToken(token)
 
-    const [state, dispatch] = useContext(Context);
-
+    const state = useContext(GlobalStateContext) || { roomId: "" };
     const [name, setName] = useState("Alex");
 
     const [searchQueary, setsearchQueary] = useState("");

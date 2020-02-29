@@ -5,10 +5,11 @@ import { navigate } from 'gatsby';
 import AppBar from '../../common/components/AppBar'
 import AppWrapper from '../../common/components/AppWrapper'
 import { Context } from '../../common/components/State/Store'
+import { GlobalStateContext, GlobalDispatchContext } from '../../common/context/GlobalContextProvider'
 
 
 export default () => {
-    const [state, dispatch] = useContext(Context);
+    const dispatch = useContext(GlobalDispatchContext);
     const [code, setCode] = useState("");
 
     const joinRoom = () => {
