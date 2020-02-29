@@ -17,6 +17,7 @@ export default () => {
     const [searchResults, setSearchResults] = useState([]);
 
     const joinRoom = () => {
+        console.log("Joiing")
         dispatch({ type: 'SET_ROOM_ID', payload: "TEST02" })
         navigate('/client')
     }
