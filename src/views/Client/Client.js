@@ -20,6 +20,7 @@ export default () => {
     const [searchResults, setSearchResults] = useState([]);
 
     const firebase = useContext(FirebaseContext)
+    //Kommentar
 
     var prev = null
     const onChange = event => {
