@@ -1,0 +1,12 @@
+.topSongContainer{
+  border: 1px solid red;
+  width: 400px;
+}
+
+.addSong{
+  float:right;
+}
+
+.songName{
+  margin-left: 5px;
+}
